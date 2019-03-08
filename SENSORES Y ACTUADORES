@@ -1,0 +1,20 @@
+SENSORES Y ACTUADORES PARA EL PROYECTO
+
+SENSORES
+  -Temperatura
+  -Humedad del ambiente 
+  -Humedad del suelo
+  -Luz (foto resistores)
+  
+ ARDUINO: placa controladora arduino UNO R3 (ELEGOO)
+ 
+ LEDS: diodos led de varios colores 
+ 
+ HERRAMIENTAS
+  -Bomba de agua
+  -Tubos
+  -Cables con conector
+  -Cable USB
+  -Placa de prototipos
+  -Resistencias
+  -Mini Invernadero: maceta, plantas y tierras de distinta humedad
