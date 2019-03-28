@@ -5,8 +5,8 @@ También incorporaremos unos led que indiquen mediante un sistema de colores el 
 
 ## Integrantes del equipo
 
-Noelia López Rúa 54705
-Guillermo Martín Lechuga 54727
+Noelia López Rúa 
+Guillermo Martín Lechuga
 
 ## Objetivos del trabajo
 
