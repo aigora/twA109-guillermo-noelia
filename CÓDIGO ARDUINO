@@ -1,0 +1,180 @@
+// A continución tiene el código del proyecto en arduino
+//
+//
+// Declaramos variables para comunicacion con C
+int estado;
+char datoC;
+
+// Declaramos las variables para la pantalla LCD
+
+#include <LiquidCrystal.h>
+// definimos donde hemos conectado los pines de la pantalla al arduino.
+
+int RS = 5;
+int E = 6;
+int D4 = 10;
+int D5 = 11;
+int D6 = 12;
+int D7 = 13;
+
+LiquidCrystal lcd (RS, E, D4, D5, D6, D7); //Declaro los pines en los que he conectado la pantalla.
+
+
+// Declaramos las variables de las condciones de riego.
+int LEDRegar = 4;
+int pinBomba = 2;
+
+int humedad = A5;
+int luz = A0;
+int temperatura = A3;
+
+
+int ValorHumedad = 0;
+int ValorLuz = 0;
+int ValorTemp = 0;
+
+void setup() {
+
+  pinMode(7,OUTPUT); // LED Sensor de Humedad
+  pinMode(8,OUTPUT); // LED Sensor de Luz
+  pinMode(9,OUTPUT); // LED Sensor de Temperatura
+  pinMode(4,OUTPUT); // LED bomba de agua activada
+  pinMode(2,OUTPUT); // Bomba de agua
+
+  lcd.begin(16,2);
+  
+  Serial.begin(9600);
+  
+}
+
+void loop() {
+// Comenzamos con la comunicación con el programa en C.
+if (Serial.available() > 0) 
+  {
+  datoC=Serial.read();
+  if (datoC=='1')
+  estado=1;
+  else
+  if (datoC=='0')
+  estado=0;
+  }
+  
+switch (estado)
+{
+case 0:
+{
+  estado=0;
+    break;
+}
+
+case 1:
+{  
+  // SENSOR HUMEDAD
+
+  ValorHumedad = analogRead(humedad);
+   Serial.print(ValorHumedad);    
+   Serial.print("\n");
+
+
+   // SENSOR LUZ
+
+  ValorLuz = analogRead(luz); 
+    Serial.print(ValorLuz);    
+    Serial.print("\n");
+
+
+
+   // SENSOR TEMPERATURA
+
+  ValorTemp = analogRead(temperatura); 
+  ValorTemp = (5.0 * ValorTemp * 100.0)/1024.0;
+  
+  Serial.print(ValorTemp);    
+  Serial.print("\n"); 
+  
+
+// COMPROBACIÓN DE LAS CONDICIONES DE RIEGO
+
+if (ValorHumedad < 300){
+
+  if (ValorLuz < 300){
+
+    if (ValorTemp < 20){
+
+      digitalWrite(LEDRegar, HIGH); // LED para indicar que estamos regando.
+      digitalWrite(pinBomba, HIGH); // Cuando se cumplen todas las condiciones regamos.
+      Serial.print("Hay que regar. \n");
+      digitalWrite(9,LOW);
+      digitalWrite(8,LOW);
+      digitalWrite(7,LOW);
+    }
+    
+    else {
+      digitalWrite(9,HIGH); // No se cumple la condición de temperatura.
+      digitalWrite(8,LOW);
+      digitalWrite(7,LOW);
+      digitalWrite(LEDRegar, LOW);
+      digitalWrite(pinBomba, LOW);
+      Serial.print("No se puede regar, hace mucho calor. \n");
+    }
+
+  // FIN BUCLE TEMPERATURA.
+    
+  } 
+  
+  else {
+      digitalWrite(8,HIGH);
+      digitalWrite(9,LOW);
+      digitalWrite(7,LOW);
+      digitalWrite(LEDRegar, LOW);
+      digitalWrite(pinBomba, LOW);
+      Serial.print("No se puede regar, hay mucha luz. \n"); // No se cumple la condición de luz.
+  }
+
+  // FIN BUCLE LUZ
+  
+}
+
+else {
+      digitalWrite(7,HIGH);
+      digitalWrite(9,LOW);
+      digitalWrite(8,LOW);
+      digitalWrite(LEDRegar, LOW);
+      digitalWrite(pinBomba, LOW);
+      Serial.print("No se puede regar, la tierra tiene la humedad necesaria. \n"); // No se cumple la condición de humedad.
+    }
+    
+// FIN BUCLE HUMEDAD
+
+
+delay(2000); // Tiempo de espera para que el loop se repita.
+
+
+// Pantalla LCD
+
+ lcd.setCursor(0,0);  
+ lcd.print("Humedad:");
+
+ lcd.setCursor(9,0);
+ lcd.print(ValorHumedad);
+
+ lcd.setCursor(0,1);
+ lcd.print("Luz:");
+
+ lcd.setCursor(5,1);
+ lcd.print(ValorLuz);
+
+ lcd.setCursor(9,1);
+ lcd.print("T:");
+
+ lcd.setCursor(11,1);
+ lcd.print(ValorTemp);
+
+ delay(2000);
+
+
+}
+}
+} 
+
+// FIN DEL CÓDIGO
