@@ -1,6 +1,5 @@
 // A continución tiene el código del proyecto en arduino
 //
-//
 // Declaramos variables para comunicacion con C
 int estado;
 char datoC;
