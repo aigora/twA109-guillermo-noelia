@@ -1,6 +1,5 @@
 // Acontinuación le dejamos el código para la comunicación entre nuestro arduino y C.
 //
-//
 
 #include <stdio.h>
 #include <stdlib.h>
